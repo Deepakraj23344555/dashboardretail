@@ -280,32 +280,52 @@ elif choice == "Dashboard":
         st.markdown("### 📅 Revenue Over Time")
         daily = data.groupby('date').agg({'revenue': 'sum'}).reset_index()
         st.plotly_chart(px.line(daily, x='date', y='revenue', markers=True), use_container_width=True)
+        st.markdown("""
+> **Explanation:** This line chart shows how total revenue changes over time. Peaks and dips help identify high-demand periods, promotional impacts, or seasonality in sales.
+""")
 
         st.markdown("### 📦 Top Selling Products")
         top_products = data.groupby('product')['revenue'].sum().sort_values(ascending=False).reset_index()
         st.plotly_chart(px.bar(top_products, x='product', y='revenue', text_auto=True), use_container_width=True)
+        st.markdown("""
+> **Explanation:** This bar chart highlights which products generate the most revenue, helping you focus on best-sellers and manage inventory or promotions accordingly.
+""")
 
         st.markdown("### 🌍 Region vs Product Heatmap")
         pivot = data.pivot_table(values='revenue', index='region', columns='product', aggfunc='sum', fill_value=0)
         fig, ax = plt.subplots()
         sns.heatmap(pivot, annot=True, fmt=".0f", cmap="YlGnBu", ax=ax)
         st.pyplot(fig)
+        st.markdown("""
+> **Explanation:** The heatmap shows revenue distribution across regions and products. Darker shades indicate higher sales, revealing regional product preferences.
+""")
 
         st.markdown("### 🗓 Monthly Trend")
         data['month'] = data['date'].dt.to_period('M')
         monthly = data.groupby('month')[['revenue', 'units_sold']].sum().reset_index()
         st.bar_chart(monthly.set_index('month'))
+        st.markdown("""
+> **Explanation:** This monthly trend analysis helps visualize seasonality by aggregating sales and units sold per month. It guides planning for peak periods.
+""")
 
         st.markdown("### 📤 Download Filtered Data")
         st.download_button("Download CSV", data=convert_df(data), file_name="filtered_sales.csv", mime='text/csv')
+
         st.markdown("### 📌 Dynamic Chart")
         colx1, colx2 = st.columns(2)
         xcol = colx1.selectbox("X-axis", options=data.select_dtypes(include=['object', 'datetime64']).columns)
         ycol = colx2.selectbox("Y-axis", options=data.select_dtypes(include='number').columns)
         st.plotly_chart(px.bar(data, x=xcol, y=ycol), use_container_width=True)
+        st.markdown("""
+> **Explanation:** The dynamic chart lets you customize views by selecting different variables for X and Y axes, enabling exploratory data analysis tailored to your needs.
+""")
 
         st.markdown("### 🔬 Correlation Matrix")
         st.dataframe(data.corr(numeric_only=True).round(2))
+        st.markdown("""
+> **Explanation:** The correlation matrix quantifies relationships between numerical variables. For example, it can show how strongly units sold relate to revenue.
+""")
+
 
 # -------------------- FEEDBACK --------------------
 elif choice == "Feedback":
@@ -385,8 +405,14 @@ elif choice == "Predictions":
             forecast = model.predict(future)
             st.markdown("#### 🔮 Forecasted Revenue (Next 30 Days)")
             st.plotly_chart(px.line(forecast, x='ds', y='yhat', labels={'ds': 'Date', 'yhat': 'Predicted Revenue'}), use_container_width=True)
+            st.markdown("""
+> **Explanation:** This forecast predicts future revenue for the next 30 days using historical sales trends. It helps with inventory planning and budgeting.
+""")
             st.markdown("#### 📉 Forecast Components")
             st.plotly_chart(plot_components_plotly(model, forecast), use_container_width=True)
+            st.markdown("""
+> **Explanation:** The forecast components show trend, seasonality, and holiday effects separately, giving insight into underlying patterns in sales.
+""")
 
     # -------------------- Revenue Prediction --------------------
     elif prediction_option == "Revenue Prediction Model":
@@ -414,6 +440,9 @@ elif choice == "Predictions":
             }])
             predicted_revenue = model.predict(input_df)[0]
             st.success(f"📈 Predicted Revenue: ${predicted_revenue:.2f}")
+            st.markdown("""
+> **Explanation:** This model estimates revenue for a specific product, region, and units sold, helping in planning and setting sales targets.
+""")
 
     # -------------------- Seasonality Analysis --------------------
     elif prediction_option == "Seasonality Analysis":
@@ -430,8 +459,14 @@ elif choice == "Predictions":
                 'July', 'August', 'September', 'October', 'November', 'December'
             ])
             st.bar_chart(monthly_avg)
+            st.markdown("""
+> **Explanation:** Average revenue by month shows seasonal patterns. Peaks can indicate higher demand periods for marketing focus.
+""")
             st.markdown("#### 📅 Average Revenue by Weekday")
             weekday_avg = data.groupby('weekday')['revenue'].mean().reindex([
                 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
             ])
             st.bar_chart(weekday_avg)
+            st.markdown("""
+> **Explanation:** Average revenue by weekday helps identify which days perform better, guiding staffing and promotional scheduling.
+""")
