@@ -481,15 +481,6 @@ elif choice == "Predictions":
             This chart shows average revenue by weekday. It reveals which days are busiest, helping schedule staff or promotions effectively.
             """)
 
-theme_choice = st.sidebar.radio("🌗 Choose Theme", ["Light", "Dark"])
-
-if theme_choice == "Dark":
-    st.markdown("""
-        <style>
-            body, .stApp { background-color: #d4cdcd; color: #0f0f0f; }
-        </style>
-    """, unsafe_allow_html=True)
-
 
 
 
