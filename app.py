@@ -329,25 +329,6 @@ elif choice == "Dashboard":
         This correlation matrix shows relationships between numerical variables. Values closer to 1 or -1 indicate strong positive or negative correlations. It helps identify factors influencing revenue.
         """)
 
-# Top Selling Products with click filter
-selected_product = None
-if 'selected_product' not in st.session_state:
-    st.session_state.selected_product = None
-
-top_products_fig = px.bar(top_products, x='product', y='revenue', text_auto=True)
-top_products_fig.update_traces(marker_color='lightskyblue')
-
-selected = st.plotly_chart(top_products_fig, use_container_width=True)
-st.markdown("Click on a bar to filter! (Feature requires JS callbacks with Dash/Streamlit Custom Components for full interactivity)")
-
-# Emulated filter
-selected_product = st.selectbox("Or manually choose product to drill down", ["All"] + list(top_products['product']))
-if selected_product != "All":
-    filtered = data[data['product'] == selected_product]
-    daily_product = filtered.groupby('date')['revenue'].sum().reset_index()
-    st.plotly_chart(px.line(daily_product, x='date', y='revenue'), use_container_width=True)
-
-
 # -------------------- FEEDBACK --------------------
 elif choice == "Feedback":
     st.subheader("⭐ Rate Your Experience")
