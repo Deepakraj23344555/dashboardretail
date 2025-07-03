@@ -480,24 +480,6 @@ elif choice == "Predictions":
             This chart shows average revenue by weekday. It reveals which days are busiest, helping schedule staff or promotions effectively.
             """)
 
-import smtplib
-from email.mime.text import MIMEText
-
-def send_email_report(to_email, subject, body):
-    msg = MIMEText(body)
-    msg['Subject'] = subject
-    msg['From'] = "your_email@gmail.com"
-    msg['To'] = to_email
-
-    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-        server.login("your_email@gmail.com", "your_password")
-        server.sendmail(msg['From'], [msg['To']], msg.as_string())
-
-if st.button("📧 Send Weekly Report"):
-    body = f"Total revenue this week: ${data['revenue'].sum():,.2f}"
-    send_email_report("manager@example.com", "Weekly Sales Report", body)
-    st.success("Email sent!")
-
 
 
 
