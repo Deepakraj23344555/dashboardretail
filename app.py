@@ -15,54 +15,36 @@ from sklearn.pipeline import make_pipeline
 
 # -------------------- PAGE CONFIG --------------------
 st.set_page_config(page_title="Retail Sales Dashboard", layout="wide")
-st.markdown("""
-    <style>
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .welcome-banner {
-            animation: fadeInUp 1s ease-out;
-        }
-    </style>
-    <div class="welcome-banner" style="text-align:center; padding: 2rem 1rem;
-                border-radius: 15px; background: linear-gradient(to right, #89f7fe, #66a6ff);
-                color: #ffffff; font-size: 2.5rem; font-weight: bold;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                box-shadow: 0 0 20px rgba(0,0,0,0.3);">
-        👋 Welcome to the <span style="color: #ffdf00;">Retail Sales Dashboard</span>!
-    </div>
-""", unsafe_allow_html=True)
 
-# -------------------- BACKGROUND --------------------
+# -------------------- CUSTOM STYLES --------------------
 st.markdown("""
     <style>
-        .stApp {
-            background: linear-gradient(to right, #c4fda1, #c2e9fb, #cfa1fd);
-            animation: gradient 15s ease infinite;
-            background-size: 400% 400%;
-        }
-        @keyframes gradient {
-            0% {background-position: 0% 50%;}
-            50% {background-position: 100% 50%;}
-            100% {background-position: 0% 50%;}
-        }
-        section[data-testid="stSidebar"] {
-            background: linear-gradient(to bottom, #1e3c72, #2a5298);
-        }
-        section[data-testid="stSidebar"] h1,
-        section[data-testid="stSidebar"] label,
-        section[data-testid="stSidebar"] .stTabs [data-baseweb="tab"] {
-            color: white !important;
-        }
-        section[data-testid="stSidebar"] .stTabs [aria-selected="true"] {
-            font-weight: bold;
-            border-bottom: 2px solid #f0b90b;
-        }
+    .stApp {
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+    }
+    @keyframes gradientBG {
+        0% {background-position: 0% 50%;}
+        50% {background-position: 100% 50%;}
+        100% {background-position: 0% 50%;}
+    }
+    section[data-testid="stSidebar"] {
+        background: linear-gradient(to bottom, #1e3c72, #2a5298);
+    }
+    section[data-testid="stSidebar"] h1,
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] .stTabs [data-baseweb="tab"] {
+        color: white !important;
+    }
+    section[data-testid="stSidebar"] .stTabs [aria-selected="true"] {
+        font-weight: bold;
+        border-bottom: 2px solid #f0b90b;
+    }
     </style>
 """, unsafe_allow_html=True)
 
-# -------------------- DATABASES --------------------
+# -------------------- DATABASE SETUP --------------------
 engine = sqlalchemy.create_engine('sqlite:///sales.db')
 user_engine = sqlalchemy.create_engine('sqlite:///users.db')
 feedback_engine = sqlalchemy.create_engine('sqlite:///feedback.db')
@@ -85,6 +67,68 @@ with feedback_engine.connect() as conn:
         )
     """))
     conn.commit()
+
+# -------------------- SESSION STATE --------------------
+if 'auth' not in st.session_state:
+    st.session_state.auth = False
+if 'user' not in st.session_state:
+    st.session_state.user = ""
+if 'welcome_screen' not in st.session_state:
+    st.session_state.welcome_screen = True
+
+# -------------------- WELCOME SCREEN --------------------
+if not st.session_state.auth and st.session_state.welcome_screen:
+    st.markdown("""
+        <style>
+        .big-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            text-align: center;
+            background: -webkit-linear-gradient(45deg, #89f7fe, #66a6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding-top: 2rem;
+        }
+        .sub-title {
+            font-size: 1.5rem;
+            text-align: center;
+            color: #333;
+            margin-bottom: 2rem;
+        }
+        .cta-button {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .stButton>button {
+            background: linear-gradient(90deg, #66a6ff, #89f7fe);
+            color: white;
+            border-radius: 8px;
+            padding: 0.75rem 2rem;
+            border: none;
+            font-size: 1.2rem;
+            transition: background 0.3s ease;
+        }
+        .stButton>button:hover {
+            background: linear-gradient(90deg, #89f7fe, #66a6ff);
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<div class='big-title'>🚀 Retail Sales Analytics Platform</div>", unsafe_allow_html=True)
+    st.markdown("<div class='sub-title'>Transform Your Sales Data Into Actionable Insights</div>", unsafe_allow_html=True)
+    st.image("https://images.unsplash.com/photo-1621523412850-ef3dbd394bb9", use_column_width=True, caption="Data-driven decisions for your business")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("🔐 Login"):
+            st.session_state.welcome_screen = False
+    with col2:
+        if st.button("📝 Register"):
+            st.session_state.welcome_screen = False
+
+    st.stop()
 
 # -------------------- AUTH HELPERS --------------------
 def hash_password(password):
@@ -171,12 +215,6 @@ def clear_db():
 def convert_df(df):
     return df.to_csv(index=False).encode('utf-8')
 
-# -------------------- SESSION SETUP --------------------
-if 'auth' not in st.session_state:
-    st.session_state.auth = False
-if 'user' not in st.session_state:
-    st.session_state.user = ""
-
 # -------------------- AUTH UI --------------------
 if not st.session_state.auth:
     st.sidebar.title("👤 User Login")
@@ -202,7 +240,7 @@ if not st.session_state.auth:
                 st.error("❌ Username already exists.")
     st.stop()
 
-# -------------------- APP HEADER & LOGOUT --------------------
+# -------------------- MAIN APP --------------------
 st.sidebar.markdown(
     f"<span style='color:white; font-weight:bold;'>👋 Welcome, {st.session_state.user}</span>",
     unsafe_allow_html=True
@@ -210,11 +248,14 @@ st.sidebar.markdown(
 if st.sidebar.button("🚪 Logout"):
     st.session_state.auth = False
     st.session_state.user = ""
+    st.session_state.welcome_screen = True
     st.rerun()
 
-# -------------------- MAIN MENU --------------------
 menu = ["Upload Data", "View Data", "Dashboard", "Predictions", "Admin Panel", "Feedback"]
 choice = st.sidebar.selectbox("📂 Navigate", menu)
+
+# ... keep the rest of your code (Upload, View, Dashboard, Predictions, Admin Panel, Feedback)
+# unchanged (you can paste all that logic here from your current app — the *rest* of your original code remains as is)
 
 # -------------------- UPLOAD --------------------
 if choice == "Upload Data":
