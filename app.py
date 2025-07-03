@@ -118,7 +118,7 @@ if not st.session_state.auth and st.session_state.welcome_screen:
 
     st.markdown("<div class='big-title'>🚀 Retail Sales Analytics Platform</div>", unsafe_allow_html=True)
     st.markdown("<div class='sub-title'>Transform Your Sales Data Into Actionable Insights</div>", unsafe_allow_html=True)
-    st.image("https://images.unsplash.com/photo-1621523412850-ef3dbd394bb9", use_column_width=True, caption="Data-driven decisions for your business")
+    st.image("https://images.unsplash.com/photo-1621523412850-ef3dbd394bb9", use_container_width=True, caption="Data-driven decisions for your business")
 
     col1, col2 = st.columns(2)
     with col1:
