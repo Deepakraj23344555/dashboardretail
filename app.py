@@ -486,7 +486,7 @@ theme_choice = st.sidebar.radio("🌗 Choose Theme", ["Light", "Dark"])
 if theme_choice == "Dark":
     st.markdown("""
         <style>
-            body, .stApp { background-color: #121212; color: #FFFFFF; }
+            body, .stApp { background-color: #d4cdcd; color: #0f0f0f; }
         </style>
     """, unsafe_allow_html=True)
 
