@@ -481,20 +481,5 @@ elif choice == "Predictions":
             This chart shows average revenue by weekday. It reveals which days are busiest, helping schedule staff or promotions effectively.
             """)
 
-if 'chat_history' not in st.session_state:
-    st.session_state.chat_history = []
 
-with st.sidebar.expander("🤖 Ask SalesBot"):
-    user_input = st.text_input("Ask about sales data:")
-    if st.button("Send"):
-        st.session_state.chat_history.append(("You", user_input))
-        # Dummy response. Replace with OpenAI call for GPT-powered bot
-        if "top product" in user_input.lower():
-            bot_reply = "Widget A had the highest sales last month."
-        else:
-            bot_reply = "Sorry, I don't know that yet!"
-        st.session_state.chat_history.append(("SalesBot", bot_reply))
-
-    for speaker, msg in st.session_state.chat_history:
-        st.sidebar.markdown(f"**{speaker}:** {msg}")
 
