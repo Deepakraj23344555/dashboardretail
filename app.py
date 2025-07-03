@@ -480,15 +480,7 @@ elif choice == "Predictions":
             This chart shows average revenue by weekday. It reveals which days are busiest, helping schedule staff or promotions effectively.
             """)
 
-data['year_month'] = data['date'].dt.strftime('%Y-%m')
-animated_fig = px.bar(
-    data,
-    x='product', y='revenue',
-    color='region',
-    animation_frame='year_month',
-    title='Animated Sales by Month',
-)
-st.plotly_chart(animated_fig, use_container_width=True)
+
 
 
 
