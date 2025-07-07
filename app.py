@@ -62,7 +62,7 @@ st.markdown("""
             color: #ffffff; font-size: 2.5rem; font-weight: bold;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             box-shadow: 0 0 20px rgba(0,0,0,0.3);">
-        🚀 Welcome to the <span style="color: #ffdf00;">✨ Retail Sales Dashboard</span>!
+        🚀 Welcome to the <span style="color: #ffdf00;">✨ SalesPulse</span>!
     </div>
 """, unsafe_allow_html=True)
 
